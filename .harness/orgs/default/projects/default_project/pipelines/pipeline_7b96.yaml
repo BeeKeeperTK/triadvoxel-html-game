@@ -19,7 +19,7 @@ pipeline:
           template:
             uses: harnessAI
             with:
-              connector: connector_GithubCopilot_80cc
+              connector: account.harnessLlm
               prompt: |-
                 1) Make the weapons draggable and while they are being dragged, make that core game mechanic aesthetic also visible. Do keep in mind that we are in mobile interface, so we will have to detect touch-based inputs.
                 2) The backpack visual looks very clunky and the rectangular like slots are very ugly and don't look very uniform in shape - make them always the same shape no matter what.
