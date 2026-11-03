@@ -8,8 +8,6 @@ pipeline:
       timeout: 20m
       clone:
         enabled: true
-      cache:
-        enabled: true
       steps:
         - id: setupNode
           name: Setup Node
