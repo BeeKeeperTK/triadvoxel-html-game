@@ -5,7 +5,7 @@ pipeline:
             script: find /harness -maxdepth 3 -type f -iname '*.html' -print
     - id: nodeNpmBuildTestHostedLinuxStage_1
       name: Node npm Build and Test on Harness Cloud (Linux)
-      timeout: 25m
+      timeout: 20m
       clone:
         enabled: true
       cache:
@@ -17,7 +17,7 @@ pipeline:
             uses: setupNode@1.0.0
         - id: agent_group
           name: Agent Time Box
-          timeout: 17m
+          timeout: 12m
           on-failure:
             errors: all
             action: ignore
@@ -26,7 +26,7 @@ pipeline:
               - name: HTML Game Reviewer
                 id: HTML_Game_Reviewer
                 template:
-                  uses: ca_html_game_reviewer@1.0.2
+                  uses: ca_html_game_reviewer@1.0.3
         - name: Push Updated Game
           id: Push_Updated_Game
           run:
