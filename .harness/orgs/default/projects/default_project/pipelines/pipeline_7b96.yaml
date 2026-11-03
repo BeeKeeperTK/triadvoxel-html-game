@@ -5,7 +5,7 @@ pipeline:
             script: find /harness -maxdepth 3 -type f -iname '*.html' -print
     - id: nodeNpmBuildTestHostedLinuxStage_1
       name: Node npm Build and Test on Harness Cloud (Linux)
-      timeout: 30m
+      timeout: 17m
       clone:
         enabled: true
       cache:
@@ -18,48 +18,28 @@ pipeline:
         - name: HTML Game Reviewer
           id: HTML_Game_Reviewer
           template:
-            uses: ca_html_game_reviewer@1.0.1
+            uses: ca_html_game_reviewer@1.0.2
         - name: Push Updated Game
           id: Push_Updated_Game
           run:
             env:
               GITHUB_TOKEN: ${{ secrets.getValue("Github_Token") }}
-            script: "set -e\r
-
-              GIT_DIR_PATH=$(find /harness -maxdepth 3 -name .git -type d | head
-              -n 1)\r
-
-              cd \"$(dirname \"$GIT_DIR_PATH\")\"\r
-
-              GAME=TRIAD_Mobile_Patch_v06.html\r
-
-              if [ ! -s \"$GAME\" ]; then\r
-
-              \  echo \"ERROR: $GAME was not produced\"\r
-
-              \  exit 1\r
-
-              fi\r
-
-              if ! grep -qi \"</html>\" \"$GAME\"; then\r
-
-              \  echo \"ERROR: $GAME looks incomplete (no closing html tag)\"\r
-
-              \  exit 1\r
-
-              fi\r
-
-              git config user.name \"Harness AI Agent\"\r
-
-              git config user.email
-              \"harness-ai-agent@users.noreply.github.com\"\r
-
-              git checkout -B ai-game-upgrades\r
-
-              git add -- \"$GAME\"\r
-
-              git commit -m \"Add TRIAD v0.6 with AI game upgrades\"\r
-
-              git push --force
-              \"https://x-access-token:${GITHUB_TOKEN}@github.com/BeeKeeperTK/t\
-              riadvoxel-html-game.git\" ai-game-upgrades"
+            script: |-
+              set -e
+              GIT_DIR_PATH=$(find /harness -maxdepth 3 -name .git -type d | head -n 1)
+              cd "$(dirname "$GIT_DIR_PATH")"
+              GAME=TRIAD_Mobile_Patch_v06.html
+              if [ ! -s "$GAME" ]; then
+                echo "ERROR: $GAME was not produced"
+                exit 1
+              fi
+              if ! grep -qi "</html>" "$GAME"; then
+                echo "ERROR: $GAME looks incomplete (no closing html tag)"
+                exit 1
+              fi
+              git config user.name "Harness AI Agent"
+              git config user.email "harness-ai-agent@users.noreply.github.com"
+              git checkout -B ai-game-upgrades
+              git add -- "$GAME"
+              git commit -m "Add TRIAD v0.6 with AI game upgrades"
+              git push --force "https://x-access-token:${GITHUB_TOKEN}@github.com/BeeKeeperTK/triadvoxel-html-game.git" ai-game-upgrades
