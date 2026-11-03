@@ -2,7 +2,32 @@ pipeline:
   stages:
     - steps:
         - run:
-            script: echo "hello world"
+            script: "set -eu\r
+
+              \r
+
+              echo \"Files in the cloned workspace:\"\r
+
+              ls -la /harness\r
+
+              \r
+
+              echo \"HTML files:\"\r
+
+              find /harness -maxdepth 3 -type f -iname '*.html' -print\r
+
+              \r
+
+              echo \"Checking that at least one HTML file exists:\"\r
+
+              html_file=\"$(find /harness -maxdepth 3 -type f -iname '*.html'
+              -print -quit)\"\r
+
+              test -n \"$html_file\"\r
+
+              \r
+
+              echo \"Found HTML source: $html_file\""
     - id: nodeNpmBuildTestHostedLinuxStage_1
       name: Node npm Build and Test on Harness Cloud (Linux)
       clone:
@@ -14,16 +39,6 @@ pipeline:
           name: Setup Node
           template:
             uses: setupNode@1.0.0
-        - name: Cloning Git Repository
-          id: Cloning_Git_Repository
-          build:
-            uses: gitCloneStep
-            with:
-              connector: connector_Github_cdac
-              repo_name: triadvoxel-html-game
-              build:
-                target: Git Branch
-                branch: main
         - name: HTML Game Reviewer
           id: HTML_Game_Reviewer
           template:
