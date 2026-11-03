@@ -5,6 +5,7 @@ pipeline:
             script: find /harness -maxdepth 3 -type f -iname '*.html' -print
     - id: nodeNpmBuildTestHostedLinuxStage_1
       name: Node npm Build and Test on Harness Cloud (Linux)
+      timeout: 30m
       clone:
         enabled: true
       cache:
@@ -27,13 +28,18 @@ pipeline:
               set -e
               GIT_DIR_PATH=$(find /harness -maxdepth 3 -name .git -type d | head -n 1)
               cd "$(dirname "$GIT_DIR_PATH")"
+              GAME=TRIAD_Mobile_Patch_v06.html
+              if [ ! -s "$GAME" ]; then
+                echo "ERROR: $GAME was not produced"
+                exit 1
+              fi
+              if ! grep -qi "</html>" "$GAME"; then
+                echo "ERROR: $GAME looks incomplete (no closing html tag)"
+                exit 1
+              fi
               git config user.name "Harness AI Agent"
               git config user.email "harness-ai-agent@users.noreply.github.com"
               git checkout -B ai-game-upgrades
-              git add -A -- '*.html'
-              if git diff --cached --quiet; then
-                echo "No HTML changes to commit"
-                exit 0
-              fi
-              git commit -m "Apply AI game upgrades"
+              git add -- "$GAME"
+              git commit -m "Add TRIAD v0.6 with AI game upgrades"
               git push --force "https://x-access-token:${GITHUB_TOKEN}@github.com/BeeKeeperTK/triadvoxel-html-game.git" ai-game-upgrades
