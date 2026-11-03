@@ -18,3 +18,22 @@ pipeline:
           id: HTML_Game_Reviewer
           template:
             uses: ca_html_game_reviewer@1.0.0
+        - name: Push Updated Game
+          id: Push_Updated_Game
+          run:
+            env:
+              GITHUB_TOKEN: ${{ secrets.getValue("Github_Token") }}
+            script: |-
+              set -e
+              GIT_DIR_PATH=$(find /harness -maxdepth 3 -name .git -type d | head -n 1)
+              cd "$(dirname "$GIT_DIR_PATH")"
+              git config user.name "Harness AI Agent"
+              git config user.email "harness-ai-agent@users.noreply.github.com"
+              git checkout -B ai-game-upgrades
+              git add -A -- '*.html'
+              if git diff --cached --quiet; then
+                echo "No HTML changes to commit"
+                exit 0
+              fi
+              git commit -m "Apply AI game upgrades"
+              git push --force "https://x-access-token:${GITHUB_TOKEN}@github.com/BeeKeeperTK/triadvoxel-html-game.git" ai-game-upgrades
