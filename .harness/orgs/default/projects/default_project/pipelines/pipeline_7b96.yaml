@@ -20,7 +20,7 @@ pipeline:
             uses: gitCloneStep
             with:
               connector: connector_Github_cdac
-              repo_name: VoxelTriad_HTML_Game
+              repo_name: triadvoxel-html-game
               build:
                 target: Git Branch
                 branch: main
