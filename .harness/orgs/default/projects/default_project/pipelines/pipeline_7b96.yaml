@@ -18,7 +18,7 @@ pipeline:
         - name: HTML Game Reviewer
           id: HTML_Game_Reviewer
           template:
-            uses: ca_html_game_reviewer@1.0.0
+            uses: ca_html_game_reviewer@1.0.1
         - name: Push Updated Game
           id: Push_Updated_Game
           run:
