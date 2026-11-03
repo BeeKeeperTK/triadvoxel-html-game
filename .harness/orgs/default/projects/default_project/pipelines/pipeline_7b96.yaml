@@ -17,33 +17,4 @@ pipeline:
         - name: HTML Game Reviewer
           id: HTML_Game_Reviewer
           template:
-            uses: harnessAI
-            with:
-              connector: account.harnessLlm
-              prompt: |-
-                1) Make the weapons draggable and while they are being dragged, make that core game mechanic aesthetic also visible. Do keep in mind that we are in mobile interface, so we will have to detect touch-based inputs.
-                2) The backpack visual looks very clunky and the rectangular like slots are very ugly and don't look very uniform in shape - make them always the same shape no matter what.
-                3) Instead of just giving players the option to press the button to rotate, allow holding on tap to incrementally rotate the piece when held for longer than 2 seconds in 90-180-270-360 order.
-                4) Before beginning, get rid of the "Ready" button when we already have "Begin" button - it is very redundant.
-                5) Increase the size of the Swap Button and the Dash Button to a size just as big as the shooting button. I ended up just using the Shoot button instead of using the dash or the weapon swap because they were smaller, so it was harder to detect them immediately with my eyes.
-                6) Perhaps relocate the dash button adjacent to the joystick control and make it as big as the shoot button, so it is more intuitive to the user to dash. Also make the motion of pulling the joystick in the same direction twice the equivalent input as pressing the dash button to improve quality of life and UX.
-                We always start with Rift Saber, Sun Bow, and Orbit Blades. 
-                Make it so the active weapons alternate between 3 active choices: Rift Saber, Sun bow, Cracker Volley, Water Lance, Gravity Mace, and Rubber Shield - so 1 out of 6 will always show up before the stage begins for the user to pick. As a matter of fact - yes I think limiting the melee weapon to 1 would be good to add a feeling of Roguelike and variety of weapons, so "leveling up" or reaching the mob kill threshold bonus also offers a choice out of 3 weapons to pick from. We should still keep the maximum amount of held weapons (passive or active) to 6.
-
-                Also give 1 out of 6 passive weapons at the start before the user clicks on "Begin" button as well - Orbit Blades, Thorn Cascade (spell), Chicken Storm (spell), Swirling Yoyo, Acid Breath (spell), and Necromancy (spell).
-
-                7) Speaking of mana, I felt that the current system's active weapons are not active enough! Let's give the player the mana system, but the melee or ranged weapons don't have that mana system. Instead, they can only fire or activate melee/ranged weapon and then there should be a cooldown for the weapons - melee weapons for instance, their cooldowns should scale with the amount of damage and size of area of effect. The Rangee weapons as well - except for them it scales with their attack speed and attack damage.
-
-                As for the spells or the "passive" weapons, I want all the spells to use mana system and have the cooldown of 2 seconds between each uses instead of allowing infinite spell casting as long as there is enough mana. Do make the spells do more damage, as the Yoyo, and Blades do not have cooldown nor mana usage. So for balance's sake, we should make the Yoyo and Blades do relatively lower damaged compared to the other four spells.
-
-                Let's implement ultimate skill gauge! But only for the "passive" weapons. Also, the ultimate ability needs to be channelable and it should be held for longer than 4 seconds (it can be interrupted if more than 3 enemy attack instances hit you) - if you just tap on the ultimate ability, you can cycle between your 3 "passive" weapons to choose which "passive" weapon ultimate ability is the best for the upcoming fight.
-
-                Going back to the passive spells, I want there to be an adjacent spell button next to the normal weapon button that allows players to perform a quick-time event to unleash an ultimate spell or passive-weapon skill when the ultimate gauge is all filled up (let's say the gauge fills gradually as the player is done with the quest, so it lines up nicely with the boss spawn - so the player is ready to use the ultimate ability when the biome boss spawns in that biome)
-
-                8) Each mob and the biome should have varying degrees of physical and spell resistance! For instance, swamp enemies are more resilient to the acid and water-based attacks, while weaker to Rift or Gravity attacks (Don't tell or read it to them - just show the affinity/element affinity via UI visuals - like Critical! or Super Effective! Or just make the numbers bigger and more special effects when the mob is hit with attacks they are weak against - and effects that make the damage or hit effect smaller or insignificant if they are hit with attacks not so effective)
-
-                9) The player should have even more dynamic interaction when taking damage from enemies - either make him flash red or take knockback from enemies - and even bigger visceral response to boss attacks. The player can even be knocked out by the boss attacks for 1~2 seconds if hit by the boss attacks, which incentivizes them to avoid and learn the boss' behavior tree instead of just standing there to idlely kill the boss.
-
-                10) Please provide bilingual support to switch between English and Korean!
-
-                For now, let's just apply these changes to the current html game and let's make the next html game with these upgrades and fixes applied! The resulting file should be an executable html file! Thank you!
+            uses: ca_html_game_reviewer@1.0.0
