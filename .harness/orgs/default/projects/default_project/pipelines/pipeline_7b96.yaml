@@ -41,6 +41,10 @@ pipeline:
                 echo "ERROR: $GAME was not produced"
                 exit 1
               fi
+              if cmp -s TRIAD_Mobile_Patch_v05.html "$GAME"; then
+                echo "ERROR: $GAME is identical to v05, the agent made no changes (check the agent step log). Not pushing."
+                exit 1
+              fi
               if ! grep -qi "</html>" "$GAME"; then
                 echo "ERROR: $GAME looks incomplete (no closing html tag)"
                 exit 1
