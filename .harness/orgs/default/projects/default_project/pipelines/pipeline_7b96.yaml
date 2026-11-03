@@ -45,8 +45,23 @@ pipeline:
                 echo "ERROR: $GAME looks incomplete (no closing html tag)"
                 exit 1
               fi
-              python3 -c "import re;s=open('$GAME',encoding='utf-8').read();m=re.search(r'<script>(.*)</script>',s,re.S);open('/tmp/game.js','w',encoding='utf-8').write(m.group(1))"
-              node --check /tmp/game.js || { echo "ERROR: v06 has a JavaScript syntax error, not pushing"; exit 1; }
+              cat > /tmp/jscheck.py <<'PY'
+              import re, sys, subprocess
+              s = open(sys.argv[1], encoding='utf-8').read()
+              blocks = re.findall(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', s, re.S)
+              print('inline script blocks:', len(blocks))
+              bad = 0
+              for i, b in enumerate(blocks):
+                  p = '/tmp/game%d.js' % i
+                  open(p, 'w', encoding='utf-8').write(b)
+                  if subprocess.run(['node', '--check', p]).returncode != 0:
+                      bad = 1
+              sys.exit(1 if (bad or not blocks) else 0)
+              PY
+              if ! python3 /tmp/jscheck.py "$GAME"; then
+                echo "ERROR: v06 has a JavaScript syntax error, not pushing"
+                exit 1
+              fi
               git config user.name "Harness AI Agent"
               git config user.email "harness-ai-agent@users.noreply.github.com"
               git checkout -B ai-game-upgrades
