@@ -5,7 +5,7 @@ pipeline:
             script: find /harness -maxdepth 3 -type f -iname '*.html' -print
     - id: nodeNpmBuildTestHostedLinuxStage_1
       name: Node npm Build and Test on Harness Cloud (Linux)
-      timeout: 17m
+      timeout: 25m
       clone:
         enabled: true
       cache:
@@ -15,10 +15,18 @@ pipeline:
           name: Setup Node
           template:
             uses: setupNode@1.0.0
-        - name: HTML Game Reviewer
-          id: HTML_Game_Reviewer
-          template:
-            uses: ca_html_game_reviewer@1.0.2
+        - id: agent_group
+          name: Agent Time Box
+          timeout: 17m
+          on-failure:
+            errors: all
+            action: ignore
+          group:
+            steps:
+              - name: HTML Game Reviewer
+                id: HTML_Game_Reviewer
+                template:
+                  uses: ca_html_game_reviewer@1.0.2
         - name: Push Updated Game
           id: Push_Updated_Game
           run:
@@ -37,6 +45,8 @@ pipeline:
                 echo "ERROR: $GAME looks incomplete (no closing html tag)"
                 exit 1
               fi
+              python3 -c "import re;s=open('$GAME',encoding='utf-8').read();m=re.search(r'<script>(.*)</script>',s,re.S);open('/tmp/game.js','w',encoding='utf-8').write(m.group(1))"
+              node --check /tmp/game.js || { echo "ERROR: v06 has a JavaScript syntax error, not pushing"; exit 1; }
               git config user.name "Harness AI Agent"
               git config user.email "harness-ai-agent@users.noreply.github.com"
               git checkout -B ai-game-upgrades
